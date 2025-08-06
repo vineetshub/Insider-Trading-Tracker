@@ -16,118 +16,252 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for futuristic design
+# Custom CSS for sharp, modern design
 st.markdown("""
 <style>
+    /* Global styles */
+    .main {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    }
+    
     .main-header {
-        background: linear-gradient(90deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-        padding: 2rem;
-        border-radius: 10px;
+        background: linear-gradient(90deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+        padding: 2.5rem;
+        border-radius: 0;
         margin-bottom: 2rem;
-        border: 1px solid #00d4ff;
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        border: 2px solid #00d4ff;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .main-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #00d4ff, #00ff88, #00d4ff);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+        from { opacity: 0.7; }
+        to { opacity: 1; }
     }
     
     .metric-card {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 1.5rem;
-        border-radius: 10px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+        padding: 1.8rem;
+        border-radius: 0;
         border: 1px solid #00d4ff;
-        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
         margin: 0.5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #00d4ff, #00ff88);
     }
     
     .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        border-right: 2px solid #00d4ff;
     }
     
-    .stSelectbox, .stTextInput, .stSlider {
-        background: #1a1a2e !important;
-        border: 1px solid #00d4ff !important;
-        border-radius: 5px !important;
-    }
-    
-    .stMultiSelect > div > div {
-        background: #1a1a2e !important;
+    /* Sharp input styling */
+    .stSelectbox > div > div, .stTextInput > div > div > input {
+        background: #1a1a1a !important;
         border: 2px solid #00d4ff !important;
-        border-radius: 5px !important;
-        color: #e0e0e0 !important;
-        min-height: 40px !important;
-        padding: 8px 12px !important;
+        border-radius: 0 !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        padding: 12px 16px !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stSelectbox > div > div:hover, .stTextInput > div > div > input:hover {
+        border-color: #00ff88 !important;
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.3) !important;
+        background: #0f0f0f !important;
+    }
+    
+    .stSelectbox > div > div:focus, .stTextInput > div > div > input:focus {
+        border-color: #00ff88 !important;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.4) !important;
+        background: #0f0f0f !important;
+    }
+    
+    /* Sharp multiselect styling */
+    .stMultiSelect > div > div {
+        background: #1a1a1a !important;
+        border: 2px solid #00d4ff !important;
+        border-radius: 0 !important;
+        color: #ffffff !important;
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        transition: all 0.3s ease !important;
     }
     
     .stMultiSelect > div > div:hover {
         border-color: #00ff88 !important;
-        box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
-        background: #16213e !important;
-    }
-    
-    .stMultiSelect > div > div[data-baseweb="select"] {
-        background: #1a1a2e !important;
-        border: 2px solid #00d4ff !important;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3) !important;
+        background: #0f0f0f !important;
     }
     
     .stMultiSelect > div > div > div {
-        background: #1a1a2e !important;
-        color: #e0e0e0 !important;
-    }
-    
-    .stMultiSelect > div > div > div > div {
-        background: #1a1a2e !important;
-        color: #e0e0e0 !important;
+        background: #1a1a1a !important;
+        color: #ffffff !important;
         border: 1px solid #00d4ff !important;
-        border-radius: 3px !important;
+        border-radius: 0 !important;
         margin: 2px !important;
-        padding: 4px 8px !important;
+        padding: 6px 12px !important;
+        font-weight: 500 !important;
     }
     
-    .stMultiSelect > div > div > div > div:hover {
+    .stMultiSelect > div > div > div:hover {
         background: #00d4ff !important;
-        color: #0f0f23 !important;
+        color: #0a0a0a !important;
+        border-color: #00ff88 !important;
+        transform: translateY(-1px) !important;
     }
     
+    /* Sharp slider styling */
+    .stSlider > div > div > div > div {
+        background: #00d4ff !important;
+        border-radius: 0 !important;
+    }
+    
+    .stSlider > div > div > div > div > div {
+        background: #00ff88 !important;
+        border-radius: 0 !important;
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
+    }
+    
+    /* Sharp button styling */
     .stButton > button {
-        background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%) !important;
+        background: linear-gradient(90deg, #00d4ff 0%, #00ff88 100%) !important;
         border: none !important;
-        border-radius: 5px !important;
-        color: #0f0f23 !important;
+        border-radius: 0 !important;
+        color: #0a0a0a !important;
         font-weight: bold !important;
+        padding: 12px 24px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        transition: all 0.3s ease !important;
     }
     
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4) !important;
+    }
+    
+    /* Sharp dataframe styling */
     .stDataFrame {
-        background: #1a1a2e !important;
-        border: 1px solid #00d4ff !important;
-        border-radius: 10px !important;
+        background: #1a1a1a !important;
+        border: 2px solid #00d4ff !important;
+        border-radius: 0 !important;
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1) !important;
     }
     
+    /* Sharp typography */
     h1, h2, h3 {
         color: #00d4ff !important;
-        font-weight: 300 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 2px !important;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3) !important;
     }
     
     .stMarkdown {
         color: #e0e0e0 !important;
+        font-weight: 400 !important;
     }
     
+    /* Sharp filter section */
     .filter-section {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        border: 1px solid #00d4ff;
+        background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+        padding: 1.5rem;
+        border-radius: 0;
+        border: 2px solid #00d4ff;
         margin: 1rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .filter-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #00d4ff, #00ff88, #00d4ff);
     }
     
     .filter-section h3 {
         color: #00d4ff;
-        margin: 0 0 1rem 0;
-        font-size: 1.1rem;
+        margin: 0 0 1.5rem 0;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
+    /* Sharp date input styling */
     .stDateInput > div > div {
-        background: #1a1a2e !important;
+        background: #1a1a1a !important;
         border: 2px solid #00d4ff !important;
-        border-radius: 5px !important;
-        color: #e0e0e0 !important;
+        border-radius: 0 !important;
+        color: #ffffff !important;
+        padding: 12px 16px !important;
+    }
+    
+    /* Chart styling */
+    .js-plotly-plot {
+        background: #1a1a1a !important;
+        border: 1px solid #00d4ff !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Success/Error messages */
+    .stSuccess {
+        background: linear-gradient(90deg, #00ff88, #00d4ff) !important;
+        color: #0a0a0a !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .stWarning {
+        background: linear-gradient(90deg, #ff6b6b, #ff8e8e) !important;
+        color: #ffffff !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .stInfo {
+        background: linear-gradient(90deg, #00d4ff, #0099cc) !important;
+        color: #ffffff !important;
+        border-radius: 0 !important;
+        border: none !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Remove rounded corners from all elements */
+    * {
+        border-radius: 0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -135,10 +269,10 @@ st.markdown("""
 # Main header
 st.markdown("""
 <div class="main-header">
-    <h1 style="text-align: center; margin: 0; font-size: 3rem; font-weight: 300; color: #00d4ff;">
-        INSIDER TRADING TRACKER
+    <h1 style="text-align: center; margin: 0; font-size: 2.5rem; font-weight: 700; color: #00d4ff; text-transform: uppercase; letter-spacing: 3px;">
+        COMPANY INSIDER TRADES
     </h1>
-    <p style="text-align: center; margin: 0.5rem 0 0 0; color: #e0e0e0; font-size: 1.1rem;">
+    <p style="text-align: center; margin: 1rem 0 0 0; color: #e0e0e0; font-size: 1rem; font-weight: 400; letter-spacing: 1px;">
         Real-time SEC data analysis platform
     </p>
 </div>
@@ -313,8 +447,9 @@ filtered_df = filtered_df[
 
 # Display summary metrics
 st.markdown("""
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-radius: 10px; border: 1px solid #00d4ff; margin: 2rem 0;">
-    <h2 style="color: #00d4ff; margin: 0; text-align: center;">TRADING METRICS</h2>
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); padding: 1.5rem; border-radius: 0; border: 2px solid #00d4ff; margin: 2rem 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #00d4ff, #00ff88, #00d4ff);"></div>
+    <h2 style="color: #00d4ff; margin: 0; text-align: center; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">TRADING METRICS</h2>
 </div>
 """, unsafe_allow_html=True)
 
@@ -323,8 +458,8 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.markdown(f"""
     <div class="metric-card">
-        <h3 style="color: #00d4ff; margin: 0; font-size: 1.5rem;">{len(filtered_df)}</h3>
-        <p style="color: #e0e0e0; margin: 0;">Total Trades</p>
+        <h3 style="color: #00d4ff; margin: 0; font-size: 1.8rem; font-weight: 700;">{len(filtered_df)}</h3>
+        <p style="color: #e0e0e0; margin: 0; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Total Trades</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -332,8 +467,8 @@ with col2:
     buy_trades = len(filtered_df[filtered_df['Trade Type'] == 'Buy'])
     st.markdown(f"""
     <div class="metric-card">
-        <h3 style="color: #00ff88; margin: 0; font-size: 1.5rem;">{buy_trades}</h3>
-        <p style="color: #e0e0e0; margin: 0;">Buy Trades</p>
+        <h3 style="color: #00ff88; margin: 0; font-size: 1.8rem; font-weight: 700;">{buy_trades}</h3>
+        <p style="color: #e0e0e0; margin: 0; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Buy Trades</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -341,8 +476,8 @@ with col3:
     sell_trades = len(filtered_df[filtered_df['Trade Type'] == 'Sell'])
     st.markdown(f"""
     <div class="metric-card">
-        <h3 style="color: #ff6b6b; margin: 0; font-size: 1.5rem;">{sell_trades}</h3>
-        <p style="color: #e0e0e0; margin: 0;">Sell Trades</p>
+        <h3 style="color: #ff6b6b; margin: 0; font-size: 1.8rem; font-weight: 700;">{sell_trades}</h3>
+        <p style="color: #e0e0e0; margin: 0; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Sell Trades</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -350,15 +485,16 @@ with col4:
     total_value = filtered_df['Value'].sum()
     st.markdown(f"""
     <div class="metric-card">
-        <h3 style="color: #00d4ff; margin: 0; font-size: 1.5rem;">${total_value:,.0f}</h3>
-        <p style="color: #e0e0e0; margin: 0;">Total Value</p>
+        <h3 style="color: #00d4ff; margin: 0; font-size: 1.8rem; font-weight: 700;">${total_value:,.0f}</h3>
+        <p style="color: #e0e0e0; margin: 0; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Total Value</p>
     </div>
     """, unsafe_allow_html=True)
 
 # Charts
 st.markdown("""
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-radius: 10px; border: 1px solid #00d4ff; margin: 2rem 0;">
-    <h2 style="color: #00d4ff; margin: 0; text-align: center;">TRADING ANALYTICS</h2>
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); padding: 1.5rem; border-radius: 0; border: 2px solid #00d4ff; margin: 2rem 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #00d4ff, #00ff88, #00d4ff);"></div>
+    <h2 style="color: #00d4ff; margin: 0; text-align: center; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">TRADING ANALYTICS</h2>
 </div>
 """, unsafe_allow_html=True)
 
@@ -380,8 +516,9 @@ with col2:
 
 # Data table
 st.markdown("""
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-radius: 10px; border: 1px solid #00d4ff; margin: 2rem 0;">
-    <h2 style="color: #00d4ff; margin: 0; text-align: center;">LATEST INSIDER TRADES</h2>
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); padding: 1.5rem; border-radius: 0; border: 2px solid #00d4ff; margin: 2rem 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #00d4ff, #00ff88, #00d4ff);"></div>
+    <h2 style="color: #00d4ff; margin: 0; text-align: center; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">LATEST INSIDER TRADES</h2>
 </div>
 """, unsafe_allow_html=True)
 
