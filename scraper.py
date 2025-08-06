@@ -352,7 +352,7 @@ def extract_date(text):
     return datetime.now()
 
 def generate_sample_data():
-    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'CRM']
+    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'CRM', 'IONQ', 'LEU']
     
     insiders = [
         'John Smith', 'Sarah Johnson', 'Michael Brown', 'Emily Davis', 'David Wilson',
@@ -399,110 +399,4 @@ if __name__ == "__main__":
     if not df.empty:
         print(df.head())
     else:
-        print("No data found") n match.group() if match else ''
-
-def extract_trade_type(text):
-    """Extract trade type from text"""
-    text_lower = text.lower()
-    if 'buy' in text_lower:
-        return 'Buy'
-    elif 'sell' in text_lower:
-        return 'Sell'
-    return 'Unknown'
-
-def extract_shares(text):
-    """Extract number of shares from text"""
-    match = re.search(r'(\d{1,3}(?:,\d{3})*)', text)
-    if match:
-        return parse_number(match.group())
-    return 0
-
-def extract_price(text):
-    """Extract price from text"""
-    match = re.search(r'\$(\d+\.?\d*)', text)
-    if match:
-        return float(match.group(1))
-    return 0.0
-
-def extract_value(text):
-    """Extract value from text"""
-    match = re.search(r'\$(\d{1,3}(?:,\d{3})*)', text)
-    if match:
-        return parse_number(match.group(1))
-    return 0.0
-
-def extract_date(text):
-    """Extract date from text"""
-    # Look for date patterns
-    date_patterns = [
-        r'\d{1,2}/\d{1,2}/\d{4}',
-        r'\d{4}-\d{1,2}-\d{1,2}',
-        r'\d{1,2}/\d{1,2}/\d{2}'
-    ]
-    
-    for pattern in date_patterns:
-        match = re.search(pattern, text)
-        if match:
-            return parse_date(match.group())
-    
-    return datetime.now()
-
-def generate_sample_data():
-    """
-    Generate sample insider trading data for demonstration purposes
-    """
-    # Sample tickers
-    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'CRM']
-    
-    # Sample insider names
-    insiders = [
-        'John Smith', 'Sarah Johnson', 'Michael Brown', 'Emily Davis', 'David Wilson',
-        'Lisa Anderson', 'Robert Taylor', 'Jennifer Martinez', 'Christopher Garcia', 'Amanda Rodriguez'
-    ]
-    
-    # Sample titles
-    titles = [
-        'CEO', 'CFO', 'CTO', 'COO', 'VP of Engineering', 'VP of Sales', 'VP of Marketing',
-        'Director', 'Senior Manager', 'Board Member'
-    ]
-    
-    # Generate sample data
-    trades = []
-    base_date = datetime.now()
-    
-    for i in range(50):  # Generate 50 sample trades
-        ticker = random.choice(tickers)
-        insider = random.choice(insiders)
-        title = random.choice(titles)
-        trade_type = random.choice(['Buy', 'Sell'])
-        
-        # Generate realistic values
-        shares = random.randint(100, 10000)
-        price = round(random.uniform(50, 500), 2)
-        value = shares * price
-        
-        # Generate date within last 30 days
-        days_ago = random.randint(0, 30)
-        date = base_date - timedelta(days=days_ago)
-        
-        trades.append({
-            'Ticker': ticker,
-            'Insider': insider,
-            'Title': title,
-            'Trade Type': trade_type,
-            'Shares': shares,
-            'Price': price,
-            'Value': value,
-            'Date': date
-        })
-    
-    return pd.DataFrame(trades)
-
-if __name__ == "__main__":
-    # Test the scraper
-    df = get_latest_insider_trades()
-    print(f"Scraped {len(df)} insider trades")
-    if not df.empty:
-        print(df.head())
-    else:
-        print("No data found") 
+        print("No data found")
