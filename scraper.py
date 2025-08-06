@@ -47,13 +47,13 @@ def get_latest_insider_trades(api_key=None, symbol=None, page=0):
         
         if not data or 'transactions' not in data:
             print("No data returned from SEC API")
-            return generate_sample_data()
+            return pd.DataFrame()
         
         transactions = data['transactions']
         
         if not transactions:
             print("No transactions found in SEC API response")
-            return generate_sample_data()
+            return pd.DataFrame()
         
         trades = []
         
@@ -93,18 +93,16 @@ def get_latest_insider_trades(api_key=None, symbol=None, page=0):
         
         if result_df.empty:
             print("No valid trades found in SEC API response")
-            return generate_sample_data()
+            return pd.DataFrame()
         
         return result_df
         
     except requests.RequestException as e:
         print(f"SEC API request error: {e}")
-        print("Using sample data for demonstration...")
-        return generate_sample_data()
+        return pd.DataFrame()
     except Exception as e:
         print(f"SEC API parsing error: {e}")
-        print("Using sample data for demonstration...")
-        return generate_sample_data()
+        return pd.DataFrame()
 
 def process_transaction(trans, ticker, insider_name, title, security_type):
     try:
@@ -193,7 +191,7 @@ def get_multiple_symbols_insider_trades(symbols=None, api_key=None):
     if all_trades:
         return pd.concat(all_trades, ignore_index=True)
     else:
-        return generate_sample_data()
+        return pd.DataFrame()
 
 def get_recent_insider_trades(api_key=None, days=30):
     if not api_key:
@@ -233,13 +231,13 @@ def get_recent_insider_trades(api_key=None, days=30):
         data = response.json()
         
         if not data or 'transactions' not in data:
-            return generate_sample_data()
+            return pd.DataFrame()
         
         return get_latest_insider_trades(api_key=api_key)
         
     except Exception as e:
         print(f"Error fetching recent trades: {e}")
-        return generate_sample_data()
+        return pd.DataFrame()
 
 def get_insider_info(symbol):
     try:
@@ -350,48 +348,6 @@ def extract_date(text):
             return parse_date(match.group())
     
     return datetime.now()
-
-def generate_sample_data():
-    tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'CRM', 'IONQ', 'LEU']
-    
-    insiders = [
-        'John Smith', 'Sarah Johnson', 'Michael Brown', 'Emily Davis', 'David Wilson',
-        'Lisa Anderson', 'Robert Taylor', 'Jennifer Martinez', 'Christopher Garcia', 'Amanda Rodriguez'
-    ]
-    
-    titles = [
-        'CEO', 'CFO', 'CTO', 'COO', 'VP of Engineering', 'VP of Sales', 'VP of Marketing',
-        'Director', 'Senior Manager', 'Board Member'
-    ]
-    
-    trades = []
-    base_date = datetime.now()
-    
-    for i in range(50):
-        ticker = random.choice(tickers)
-        insider = random.choice(insiders)
-        title = random.choice(titles)
-        trade_type = random.choice(['Buy', 'Sell'])
-        
-        shares = random.randint(100, 10000)
-        price = round(random.uniform(50, 500), 2)
-        value = shares * price
-        
-        days_ago = random.randint(0, 30)
-        date = base_date - timedelta(days=days_ago)
-        
-        trades.append({
-            'Ticker': ticker,
-            'Insider': insider,
-            'Title': title,
-            'Trade Type': trade_type,
-            'Shares': shares,
-            'Price': price,
-            'Value': value,
-            'Date': date
-        })
-    
-    return pd.DataFrame(trades)
 
 if __name__ == "__main__":
     df = get_latest_insider_trades()

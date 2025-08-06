@@ -47,6 +47,45 @@ st.markdown("""
         border-radius: 5px !important;
     }
     
+    .stMultiSelect > div > div {
+        background: #1a1a2e !important;
+        border: 2px solid #00d4ff !important;
+        border-radius: 5px !important;
+        color: #e0e0e0 !important;
+        min-height: 40px !important;
+        padding: 8px 12px !important;
+    }
+    
+    .stMultiSelect > div > div:hover {
+        border-color: #00ff88 !important;
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
+        background: #16213e !important;
+    }
+    
+    .stMultiSelect > div > div[data-baseweb="select"] {
+        background: #1a1a2e !important;
+        border: 2px solid #00d4ff !important;
+    }
+    
+    .stMultiSelect > div > div > div {
+        background: #1a1a2e !important;
+        color: #e0e0e0 !important;
+    }
+    
+    .stMultiSelect > div > div > div > div {
+        background: #1a1a2e !important;
+        color: #e0e0e0 !important;
+        border: 1px solid #00d4ff !important;
+        border-radius: 3px !important;
+        margin: 2px !important;
+        padding: 4px 8px !important;
+    }
+    
+    .stMultiSelect > div > div > div > div:hover {
+        background: #00d4ff !important;
+        color: #0f0f23 !important;
+    }
+    
     .stButton > button {
         background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%) !important;
         border: none !important;
@@ -67,6 +106,27 @@ st.markdown("""
     }
     
     .stMarkdown {
+        color: #e0e0e0 !important;
+    }
+    
+    .filter-section {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #00d4ff;
+        margin: 1rem 0;
+    }
+    
+    .filter-section h3 {
+        color: #00d4ff;
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+    }
+    
+    .stDateInput > div > div {
+        background: #1a1a2e !important;
+        border: 2px solid #00d4ff !important;
+        border-radius: 5px !important;
         color: #e0e0e0 !important;
     }
 </style>
@@ -99,13 +159,6 @@ api_key = st.sidebar.text_input(
     help="SEC API key for real insider trading data"
 )
 
-# Data source selection
-data_source = st.sidebar.selectbox(
-    "Data Source",
-    ["SEC API (Real Data)", "Sample Data"],
-    help="Choose between real SEC API data or sample data for demonstration"
-)
-
 # Available major company symbols
 available_symbols = [
     'AAPL', 'MSFT', 'GOOG', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'CRM',
@@ -116,62 +169,50 @@ available_symbols = [
 ]
 
 # Data type selection
-if data_source == "SEC API (Real Data)":
-    data_type = st.sidebar.selectbox(
-        "Data Type",
-        ["Recent Trades", "Company Specific", "Multiple Companies"],
-        help="Choose the type of data to fetch"
-    )
-    
-    if data_type == "Recent Trades":
-        days_back = st.sidebar.slider(
-            "Days Back",
-            min_value=7,
-            max_value=90,
-            value=30,
-            help="Number of days to look back for recent trades"
-        )
-        symbols_to_fetch = None
-    elif data_type == "Company Specific":
-        selected_symbol = st.sidebar.selectbox(
-            "Company Symbol",
-            available_symbols,
-            index=0,
-            help="Select a company to analyze"
-        )
-        symbols_to_fetch = [selected_symbol]
-    else:
-        # Multiple companies selection
-        selected_symbols = st.sidebar.multiselect(
-            "Company Symbols (Max 3)",
-            available_symbols,
-            default=['AAPL', 'MSFT'],
-            max_selections=3,
-            help="Select up to 3 companies to analyze"
-        )
-        symbols_to_fetch = selected_symbols if selected_symbols else ['AAPL']
+data_type = st.sidebar.selectbox(
+    "Data Type",
+    ["Recent Trades", "Company Specific", "Multiple Companies"],
+    help="Choose the type of data to fetch"
+)
 
-# Filters section
-st.sidebar.markdown("""
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-radius: 10px; border: 1px solid #00d4ff; margin: 1rem 0;">
-    <h3 style="color: #00d4ff; margin: 0;">FILTERS</h3>
-</div>
-""", unsafe_allow_html=True)
+if data_type == "Recent Trades":
+    days_back = st.sidebar.slider(
+        "Days Back",
+        min_value=7,
+        max_value=90,
+        value=30,
+        help="Number of days to look back for recent trades"
+    )
+    symbols_to_fetch = None
+elif data_type == "Company Specific":
+    selected_symbol = st.sidebar.selectbox(
+        "Company Symbol",
+        available_symbols,
+        index=0,
+        help="Select a company to analyze"
+    )
+    symbols_to_fetch = [selected_symbol]
+else:
+    # Multiple companies selection
+    selected_symbols = st.sidebar.multiselect(
+        "Company Symbols (Max 3)",
+        available_symbols,
+        default=['AAPL', 'MSFT'],
+        max_selections=3,
+        help="Select up to 3 companies to analyze"
+    )
+    symbols_to_fetch = selected_symbols if selected_symbols else ['AAPL']
 
 # Load data
 @st.cache_data(ttl=300)
-def load_data(data_source="SEC API (Real Data)", api_key=None, symbols=None, data_type="Recent Trades", days_back=30):
+def load_data(api_key=None, symbols=None, data_type="Recent Trades", days_back=30):
     try:
-        if data_source == "SEC API (Real Data)":
-            if data_type == "Recent Trades":
-                data = get_recent_insider_trades(api_key=api_key, days=days_back)
-            elif data_type == "Multiple Companies" and len(symbols) > 1:
-                data = get_multiple_symbols_insider_trades(symbols=symbols, api_key=api_key)
-            else:
-                data = get_latest_insider_trades(api_key=api_key, symbol=symbols[0])
+        if data_type == "Recent Trades":
+            data = get_recent_insider_trades(api_key=api_key, days=days_back)
+        elif data_type == "Multiple Companies" and len(symbols) > 1:
+            data = get_multiple_symbols_insider_trades(symbols=symbols, api_key=api_key)
         else:
-            from scraper import generate_sample_data
-            data = generate_sample_data()
+            data = get_latest_insider_trades(api_key=api_key, symbol=symbols[0])
         
         return data
     except Exception as e:
@@ -180,16 +221,12 @@ def load_data(data_source="SEC API (Real Data)", api_key=None, symbols=None, dat
 
 # Load the data
 with st.spinner("Loading insider trading data..."):
-    if data_source == "SEC API (Real Data)":
-        df = load_data(
-            data_source=data_source, 
-            api_key=api_key, 
-            symbols=symbols_to_fetch,
-            data_type=data_type,
-            days_back=days_back if data_type == "Recent Trades" else 30
-        )
-    else:
-        df = load_data(data_source=data_source)
+    df = load_data(
+        api_key=api_key, 
+        symbols=symbols_to_fetch,
+        data_type=data_type,
+        days_back=days_back if data_type == "Recent Trades" else 30
+    )
 
 if df.empty:
     st.error("No data available. Please check your configuration.")
@@ -199,37 +236,43 @@ if df.empty:
 df['Date'] = pd.to_datetime(df['Date'])
 
 # Display data source info
-if data_source == "SEC API (Real Data)":
-    if api_key:
-        if data_type == "Recent Trades":
-            st.success(f"Using real SEC insider trading data from the last {days_back} days")
-        elif data_type == "Company Specific":
-            st.success(f"Using real SEC insider trading data for: {symbols_to_fetch[0]}")
-        else:
-            st.success(f"Using real SEC insider trading data for: {', '.join(symbols_to_fetch)}")
+if api_key:
+    if data_type == "Recent Trades":
+        st.success(f"Using real SEC insider trading data from the last {days_back} days")
+    elif data_type == "Company Specific":
+        st.success(f"Using real SEC insider trading data for: {symbols_to_fetch[0]}")
     else:
-        st.warning("No API key provided. Using limited API access")
+        st.success(f"Using real SEC insider trading data for: {', '.join(symbols_to_fetch)}")
 else:
-    st.info("Using sample data for demonstration purposes")
+    st.warning("No API key provided. Using limited API access")
+
+# Filters section
+st.sidebar.markdown("""
+<div class="filter-section">
+    <h3>FILTERS</h3>
+</div>
+""", unsafe_allow_html=True)
 
 # Filters
 col1, col2 = st.sidebar.columns(2)
 
 with col1:
-    # Ticker filter
+    # Ticker filter with better visibility
     tickers = ['All'] + sorted(df['Ticker'].unique().tolist())
     selected_tickers = st.multiselect(
-        "Ticker",
+        "Ticker Symbols",
         options=tickers,
-        default=['All']
+        default=['All'],
+        help="Select ticker symbols to filter"
     )
     
-    # Trade type filter
-    trade_types = ['All'] + sorted(df['Trade Type'].unique().tolist())
+    # Simplified trade type filter - only Buy/Sell
+    trade_types = ['All', 'Buy', 'Sell']
     selected_trade_types = st.multiselect(
         "Trade Type",
         options=trade_types,
-        default=['All']
+        default=['All'],
+        help="Select trade types to filter"
     )
 
 with col2:
@@ -258,7 +301,7 @@ filtered_df = df.copy()
 if 'All' not in selected_tickers:
     filtered_df = filtered_df[filtered_df['Ticker'].isin(selected_tickers)]
 
-# Filter by trade type
+# Filter by trade type - only Buy/Sell
 if 'All' not in selected_trade_types:
     filtered_df = filtered_df[filtered_df['Trade Type'].isin(selected_trade_types)]
 
@@ -359,28 +402,6 @@ st.dataframe(
     display_df[columns_to_show],
     use_container_width=True,
     hide_index=True
-)
-
-# Export functionality
-st.markdown("""
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-radius: 10px; border: 1px solid #00d4ff; margin: 2rem 0;">
-    <h2 style="color: #00d4ff; margin: 0; text-align: center;">EXPORT DATA</h2>
-</div>
-""", unsafe_allow_html=True)
-
-# Prepare data for export
-export_df = filtered_df.copy()
-export_df['Date'] = export_df['Date'].dt.strftime('%Y-%m-%d')
-
-# Convert to CSV
-csv = export_df.to_csv(index=False)
-
-# Download button
-st.download_button(
-    label="Download CSV",
-    data=csv,
-    file_name=f"insider_trading_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-    mime="text/csv"
 )
 
 # Footer
