@@ -88,6 +88,5 @@ insider-trading-tracker/
 
 This tool is for educational and informational purposes only. Insider trading data should not be used as the sole basis for investment decisions. Always conduct thorough research and consider consulting with financial advisors.
 
-## License
 
-MIT License 
+<img width="1245" height="418" alt="image" src="https://github.com/user-attachments/assets/16968739-74d2-41a9-8869-994573a11490" />
